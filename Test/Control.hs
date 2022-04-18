@@ -29,11 +29,11 @@ instance Eq DebianControl where
 -- deriving instance Show (Paragraph' Text)
 -- deriving instance Show (Field' Text)
 
-replaceString :: String -> String -> String -> String
-replaceString old new x =
+replaceStrings :: String -> String -> String -> String
+replaceStrings old new x =
     case x =~ old of
       mr | null (mrMatch mr) -> x
-      mr -> mrBefore mr <> new <> mrAfter mr
+      mr -> mrBefore mr <> new <> replaceStrings old new (mrAfter mr)
 
 -- Additional tests of the results of parsing additional
 -- inter-paragraph newlines, or missing terminating newlines, would be
@@ -53,13 +53,12 @@ controlTests =
     , TestCase (parseDebianControlFromFile "Test/Control.hs" >>= \ vc ->
                 assertEqual "policy4"
                             -- Exceptions have bogus Eq instances, so we need to show then compare.
-                            "Left \"src/Debian/Control/Policy.hs\"(line 77, column 54): ParseControlError \"Test/Control.hs\" (line 0, column 0):\nFailed to parse Test/Control.hs"
-                            (show (either Left (either Left Right . debianRelations "Foo") vc)))
+                            "Left \"src/Debian/Control/Policy.hs\"(line ?, column ?): ParseControlError \"Test/Control.hs\" (line ?, column ?):\nFailed to parse Test/Control.hs"
+                            (replaceStrings "[0-9]+" "?" $ show (either Left (debianRelations "Foo") vc)))
     , TestCase (parseDebianControlFromFile "nonexistant" >>= \ vc ->
                 assertEqual "policy5"
-                            "Left \"src/Debian/Control/Policy.hs\"(line 76, column 36): IOError nonexistant: openBinaryFile: does not exist (No such file or directory)"
-                            (replaceString "openFile" "openBinaryFile"
-                             (show (either Left (debianRelations "Foo") (vc :: Either ControlFileError DebianControl)))))
+                            "Left \"src/Debian/Control/Policy.hs\"(line ?, column ?): IOError nonexistant: openBinaryFile: does not exist (No such file or directory)"
+                            (replaceStrings "[0-9]+" "?" . replaceStrings "openFile" "openBinaryFile" $ show (either Left (debianRelations "Foo") vc)))
 
     -- Test whether embedded newlines in field values can be mistaken
     -- for field or paragraph divisions.  In cases pretty7 and pretty9
