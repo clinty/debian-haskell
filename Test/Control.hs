@@ -57,8 +57,8 @@ controlTests =
                             (replaceStrings "[0-9]+" "?" $ show (either Left (debianRelations "Foo") vc)))
     , TestCase (parseDebianControlFromFile "nonexistant" >>= \ vc ->
                 assertEqual "policy5"
-                            "Left \"src/Debian/Control/Policy.hs\"(line ?, column ?): IOError nonexistant: openBinaryFile: does not exist (No such file or directory)"
-                            (replaceStrings "[0-9]+" "?" . replaceStrings "openFile" "openBinaryFile" $ show (either Left (debianRelations "Foo") vc)))
+                            "Left \"src/Debian/Control/Policy.hs\"(line ?, column ?): IOError nonexistant: withBinaryFile: does not exist (No such file or directory)"
+                            (replaceStrings "[0-9]+" "?" . replaceStrings "openBinaryFile" "withBinaryFile" . replaceStrings "openFile" "withBinaryFile" $ show (either Left (debianRelations "Foo") vc)))
 
     -- Test whether embedded newlines in field values can be mistaken
     -- for field or paragraph divisions.  In cases pretty7 and pretty9
