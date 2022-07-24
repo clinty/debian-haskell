@@ -56,7 +56,6 @@ import Data.Monoid ((<>))
 #endif
 import Network.URI (nullURI, parseURIReference, parseURI, parseAbsoluteURI, parseRelativeReference, URI(..), URIAuth(..), uriToString)
 import System.FilePath ((</>), dropTrailingPathSeparator, takeDirectory)
-import Test.QuickCheck (Arbitrary)
 import Text.Parsec (ParseError)
 
 $(makeLensesFor [("uriScheme", "uriSchemeLens"),
@@ -141,9 +140,6 @@ toURI' = URI' . show
 
 uriToString' :: URI -> String
 uriToString' uri = uriToString id uri ""
-
-instance Arbitrary URI where
-    -- Replace with import from network-arbitrary package
 
 class HasParseError e where fromParseError :: ParseError -> e
 instance HasParseError ParseError where fromParseError = id
