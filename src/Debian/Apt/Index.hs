@@ -283,13 +283,18 @@ indexesInRelease :: (FilePath -> Bool)
 indexesInRelease filterp (Control [p]) =
     -- In a release file we should find one or more of the fields
     -- "SHA256", "SHA1", or "MD5Sum", each containing a list of triples
-    either error (filter (\(_,_,fp) -> filterp fp)) $
-           msum [either Left (makeTuples makeSHA256) (maybe (Left "No SHA256 Field") makeTriples $ fieldValue "SHA256" p),
-                 either Left (makeTuples makeSHA1) (maybe (Left "No SHA1 Field") makeTriples $ fieldValue "SHA1" p),
-                 either Left (makeTuples makeMD5) (maybe (Left "No MD5Sum Field") makeTriples $ msum [fieldValue "MD5Sum" p,
-                                                                                                      fieldValue "Md5Sum" p,
-                                                                                                      fieldValue "MD5sum" p])]
+    case attempts of
+      (_, fps:_) -> filter (\(_,_,fp) -> filterp fp) fps
+      (errs,  _) -> error $ "No indexes in release: " <> intercalate ", " errs
     where
+      attempts = partitionEithers
+        [ attempt makeSHA256 "SHA256"
+        , attempt makeSHA1 "SHA1"
+        , attempt makeMD5 "MD5Sum" ]
+
+      attempt mksum fn = makeTuples mksum =<< makeTriples =<<
+        maybe (Left $ "No " <> fn <> " Field") Right (fieldValue fn p)
+
       makeSHA256 s = CheckSums {md5sum = Nothing, sha1 = Nothing, sha256 = Just s}
       makeSHA1 s = CheckSums {md5sum = Nothing, sha1 = Just s, sha256 = Nothing}
       makeMD5 s = CheckSums {md5sum = Just s, sha1 = Nothing, sha256 = Nothing}

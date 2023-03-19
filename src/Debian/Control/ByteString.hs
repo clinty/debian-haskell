@@ -30,6 +30,7 @@ import "mtl" Control.Monad.State
 
 import Data.Char(toLower, isSpace)
 import Data.List
+import Control.Monad (MonadPlus(..), ap, liftM, unless)
 
 import Text.ParserCombinators.Parsec.Error
 import Text.ParserCombinators.Parsec.Pos

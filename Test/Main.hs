@@ -2,15 +2,17 @@ module Main where
 
 import Test.HUnit
 import System.Exit
+import Apt
 import Changes
 import Control
+import Dependencies
 import Versions
 import Debian.Sources
-import Dependencies
 import Text.PrettyPrint
 
+main :: IO ()
 main =
-    do (c,st) <- runTestText putTextToShowS (TestList (versionTests ++ [sourcesListTests] ++ dependencyTests ++ changesTests ++ controlTests ++ prettyTests))
+    do (c,st) <- runTestText putTextToShowS (TestList (versionTests ++ [sourcesListTests] ++ dependencyTests ++ changesTests ++ controlTests ++ prettyTests ++ aptTests))
        putStrLn (st "")
        case (failures c) + (errors c) of
          0 -> return ()
@@ -18,6 +20,7 @@ main =
 
 -- | I was converting from one pretty printing package to another and
 -- was unclear how this should work.
+prettyTests :: [Test]
 prettyTests =
     [ TestCase (assertEqual
                 "pretty0"
