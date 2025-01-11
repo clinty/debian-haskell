@@ -9,7 +9,7 @@ Maintainer:     Clint Adams <clint@debian.org>
 Homepage:       https://github.com/clinty/debian-haskell
 Build-Type:     Simple
 Synopsis:       Modules for working with the Debian package system
-Tested-With:    GHC ==9.12.1 ||  ==9.10.1 || ==9.8.2 || ==9.6.6 || ==9.4.8 || ==9.2.8
+Tested-With:    GHC ==9.12.1 ||  ==9.10.1 || ==9.8.4 || ==9.6.6 || ==9.4.8 || ==9.2.8
 Description:
   This library includes modules covering some basic data types defined by
   the Debian policy manual - version numbers, control file syntax, etc.
