@@ -123,9 +123,9 @@ Executable apt-get-build-depends
  default-language: Haskell2010
 
 Test-Suite debian-tests
-  Type: exitcode-stdio-1.0
-  Hs-Source-Dirs: Test
-  Main-Is: Main.hs
+ Type: exitcode-stdio-1.0
+ Hs-Source-Dirs: Test
+ Main-Is: Main.hs
  Build-Depends: base, Cabal, debian, HUnit, parsec, pretty >= 1.1.2, regex-tdfa, text
  other-modules: Apt
               , Changes
