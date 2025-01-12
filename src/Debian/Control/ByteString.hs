@@ -30,7 +30,7 @@ import "mtl" Control.Monad.State
 
 import Data.Char(toLower, isSpace)
 import Data.List
-import Control.Monad (MonadPlus(..), ap, liftM, unless)
+import Control.Monad (MonadPlus(..), ap)
 
 import Text.ParserCombinators.Parsec.Error
 import Text.ParserCombinators.Parsec.Pos
@@ -177,7 +177,7 @@ instance Functor (Parser state) where
               Fail -> Fail
 
 instance Applicative (Parser state) where
-    pure = return
+    pure a = Parser (\s -> Ok (a,s))
     (<*>) = ap
 
 instance Alternative (Parser state) where
@@ -187,7 +187,6 @@ instance Alternative (Parser state) where
     (<|>) = mplus
 
 instance Monad (Parser state) where
-    return a = Parser (\s -> Ok (a,s))
     m >>= f =
         Parser $ \state ->
             let r = (unParser m) state in
