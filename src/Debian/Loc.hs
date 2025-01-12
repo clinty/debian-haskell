@@ -4,7 +4,6 @@ module Debian.Loc
     , mapExn
     ) where
 
-import Control.Applicative ((<$>), (<*>), pure)
 import Control.Exception (Exception, throw)
 import Control.Monad.Catch (MonadCatch, catch)
 import Language.Haskell.TH

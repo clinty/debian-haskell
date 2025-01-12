@@ -26,7 +26,6 @@ import Debian.URI (URI(..), parseURI, uriToString')
 
 import Control.Exception
 import Control.Monad (liftM, unless)
-import Control.Monad.Except
 import Data.Maybe
 import Data.Time
 import System.Directory

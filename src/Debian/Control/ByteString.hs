@@ -21,9 +21,6 @@ module Debian.Control.ByteString
 
 -- Standard GHC modules
 
-#if !MIN_VERSION_base(4,8,0)
-import Control.Applicative (Applicative(..))
-#endif
 import Control.Applicative (Alternative(..))
 import qualified Control.Exception as E
 import "mtl" Control.Monad.State

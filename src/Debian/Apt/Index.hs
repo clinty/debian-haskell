@@ -27,7 +27,6 @@ import Data.Either (partitionEithers)
 import Data.Function
 import Data.List as List (null, intercalate, sortBy, isSuffixOf, isPrefixOf)
 import qualified Data.Map as M
-import Data.Monoid ((<>))
 import Data.Text as Text (Text, unpack, concat, lines, words)
 import Data.Time
 import Debian.Apt.Methods
@@ -50,9 +49,6 @@ import Text.ParserCombinators.Parsec.Error
 import Text.PrettyPrint (render)
 import Distribution.Pretty (pretty)
 import Text.Read (readMaybe)
-#if !MIN_VERSION_base(4,8,0)
-import Control.Applicative (pure, (<$>), (<*>))
-#endif
 
 -- |Package indexes on the server are uncompressed or compressed with
 -- gzip or bzip2. We do not know what will exist on the server until we

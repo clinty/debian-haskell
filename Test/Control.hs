@@ -18,11 +18,6 @@ import Text.Parsec.Error (ParseError)
 import Text.PrettyPrint.HughesPJClass (Doc, text)
 import Text.Regex.TDFA ((=~), MatchResult(..))
 
-#if !MIN_VERSION_pretty(1,1,2)
-instance Eq Doc where
-    a == b = show a == show b
-#endif
-
 instance Eq DebianControl where
     a == b = unDebianControl a == unDebianControl b
 -- deriving instance Show (Control' Text)

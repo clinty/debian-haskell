@@ -8,7 +8,6 @@ module Debian.Arch
     ) where
 
 import Data.Data (Data)
-import Data.Monoid ((<>))
 import Data.Typeable (Typeable)
 import Text.PrettyPrint (Doc, text)
 

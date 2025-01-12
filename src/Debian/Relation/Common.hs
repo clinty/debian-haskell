@@ -5,7 +5,6 @@ module Debian.Relation.Common where
 
 import Data.Data (Data)
 import Data.List as List (map, intersperse)
-import Data.Monoid (mconcat, (<>))
 import Data.Function
 import Data.Set as Set (Set, toList)
 import Data.Typeable (Typeable)

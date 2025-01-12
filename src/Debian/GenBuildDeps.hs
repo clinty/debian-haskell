@@ -24,9 +24,6 @@ module Debian.GenBuildDeps
     , getSourceOrder
     ) where
 
-#if !MIN_VERSION_base(4,8,0)
-import           Control.Applicative ((<$>))
-#endif
 import           Control.Exception (throw)
 import           Control.Monad (filterM, foldM)
 import           Control.Monad.State (evalState, get, modify, State)

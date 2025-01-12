@@ -12,7 +12,6 @@ module Debian.Sources
 
 import Control.Lens (makeLenses, review, view)
 import Data.Maybe (fromJust)
-import Data.Monoid ((<>))
 import Data.Text (Text)
 import Debian.Codename (Codename, codename, parseCodename)
 import Debian.Pretty (PP(..))

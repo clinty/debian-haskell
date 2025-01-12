@@ -15,7 +15,6 @@ module Debian.Changes
 
 import Data.Either (partitionEithers)
 import Data.List (intercalate, intersperse)
-import Data.Monoid ((<>))
 import Data.Text (Text, pack, unpack, strip)
 import Debian.Arch (Arch, prettyArch)
 import Debian.Codename (Codename, codename, parseCodename)

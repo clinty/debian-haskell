@@ -7,11 +7,8 @@ module Debian.VendorURI
     ) where
 
 import Control.Lens (makeLenses, review)
-import Debian.TH (here)
-import Debian.URI (parseURI, URI(uriPath))
-import Distribution.Pretty (prettyShow)
+import Debian.URI (parseURI, URI())
 import Language.Haskell.TH.Syntax (Loc)
-import System.FilePath (splitDirectories)
 
 newtype VendorURI = VendorURI {_vendorURI :: URI} deriving (Eq, Ord)
 
