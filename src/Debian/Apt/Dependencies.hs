@@ -11,8 +11,6 @@ module Debian.Apt.Dependencies
     , CSP(..)
     ) -} where
 
--- test gutsyPackages "libc6" (\csp -> bt csp)
-
 import Control.Arrow (second)
 import qualified Data.ByteString.Char8 as C
 import Data.List as List (find, union)
@@ -99,9 +97,6 @@ depF p =
               Just (Comment _) -> error "depF"
     in
       preDepends ++ depends
-
-sidPackages = "/var/lib/apt/lists/ftp.debian.org_debian_dists_unstable_main_binary-i386_Packages"
-gutsyPackages = "/var/lib/apt/lists/mirror.anl.gov_pub_ubuntu_dists_gutsy_main_binary-i386_Packages"
 
 test controlFP rel labeler =
     testCSP controlFP depF rel (mapM_ (\ (_,p) -> mapM_ (print . second (render . prettyDebianVersion) . packageVersionParagraph) p ) . take 1 . search labeler)
