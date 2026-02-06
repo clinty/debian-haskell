@@ -39,6 +39,7 @@ Library
    ListLike >= 4.3.5,
    mtl,
    old-locale,
+   ordered-containers >= 0.2,
    parsec >= 2 && <4,
    pretty >= 1.1.2,
    process,
@@ -126,7 +127,15 @@ Test-Suite debian-tests
  Type: exitcode-stdio-1.0
  Hs-Source-Dirs: Test
  Main-Is: Main.hs
- Build-Depends: base, Cabal, debian, HUnit, parsec, pretty >= 1.1.2, regex-tdfa, text
+ Build-Depends: base
+              , Cabal
+              , debian
+              , HUnit
+              , ordered-containers >= 0.2
+              , parsec
+              , pretty >= 1.1.2
+              , regex-tdfa
+              , text
  other-modules: Apt
               , Changes
               , Control

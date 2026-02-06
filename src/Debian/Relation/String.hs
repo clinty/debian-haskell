@@ -23,6 +23,7 @@ import "mtl" Control.Monad.Identity (Identity)
 import Data.Set (fromList)
 import Text.ParserCombinators.Parsec
 import Text.Parsec.Prim (ParsecT)
+import qualified Data.Map.Ordered as MO
 
 -- Local Modules
 
@@ -73,7 +74,9 @@ pRelation =
        mVerReq <- pMaybeVerReq
        skipMany whiteChar
        mArch <- pMaybeArch
-       return $ Rel (BinPkgName pkgName) mVerReq mArch
+       skipMany whiteChar
+       rlists <- pRlists -- technically this is only for B-D and B-D-I
+       return $ RRel (BinPkgName pkgName) mVerReq mArch rlists
 
 pMaybeVerReq :: RelParser (Maybe VersionReq)
 pMaybeVerReq =
@@ -137,3 +140,28 @@ pArchOnly = sepBy (many1 (noneOf [']',' '])) (skipMany1 whiteChar)
 parseArchExcept :: String -> Arch
 parseArchExcept ('!' : s) = parseArch s
 parseArchExcept s = parseArch s
+
+lexeme :: RelParser a -> RelParser a
+lexeme p = p <* skipMany whiteChar
+
+symbol :: Char -> RelParser Char
+symbol = lexeme . char
+
+pRlists :: RelParser [RestrictionList]
+pRlists = many pRestrictionList
+  where
+  pRestrictionList :: RelParser RestrictionList
+  pRestrictionList = do
+    _  <- symbol '<'
+    rs <- many1 pBPAtom
+    _  <- symbol '>'
+    return (MO.fromList rs)
+  pBPAtom :: RelParser (String, Bool)
+  pBPAtom =
+        (do symbol '!'
+            bp <- pBuildProfile
+            return (bp, False))
+    <|> (do bp <- pBuildProfile
+            return (bp, True))
+  pBuildProfile :: RelParser String
+  pBuildProfile = lexeme (many1 (noneOf ['>', ' ']))

@@ -66,7 +66,7 @@ buildDependencies control = do
   DepInfo { sourceName = debianSourcePackageName control
           , relations = rels
           , binaryNames = bins
-          , depSet = Set.fromList (List.map (\(Rel x _ _) -> x) (concat rels))
+          , depSet = Set.fromList (List.map (\(RRel x _ _ _) -> x) (concat rels))
           , binSet = Set.fromList bins }
 
 -- | source package name
@@ -111,7 +111,7 @@ relaxDeps relaxInfo deps =
             filteredDependencies :: Relations
             filteredDependencies = filter (/= []) (List.map (filter keepDep) (relations info))
             keepDep :: Relation -> Bool
-            keepDep (Rel name _ _) = not (relaxInfo (sourceName info) name)
+            keepDep (RRel name _ _ _) = not (relaxInfo (sourceName info) name)
 
 data ReadyTarget a
     = ReadyTarget { ready :: a
@@ -295,7 +295,7 @@ compareSource' control1 control2
       depends1 = relations' control1
       depends2 = relations' control2
       checkPackageNameReq :: Relation -> BinPkgName -> Bool
-      checkPackageNameReq (Rel rPkgName _ _) bPkgName = rPkgName == bPkgName
+      checkPackageNameReq (RRel rPkgName _ _ _) bPkgName = rPkgName == bPkgName
 
 -- |Return the dependency info for a list of control files.
 genDeps :: [FilePath] -> IO [DebianControl]

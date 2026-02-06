@@ -1,11 +1,32 @@
-{-# LANGUAGE DeriveDataTypeable, FlexibleContexts, FlexibleInstances, OverloadedStrings, TypeSynonymInstances #-}
-module Debian.Relation.Common where
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE PatternSynonyms #-}
+module Debian.Relation.Common (
+    AndRelation
+  , ArchitectureReq(..)
+  , BinPkgName(..)
+  , checkVersionReq
+  , OrRelation
+  , ParseRelations(..)
+  , PkgName(..)
+  , Relation(.., Rel)
+  , Relations
+  , SrcPkgName(..)
+  , VersionReq(..)
+  , RestrictionList
+)
+where
 
 -- Standard GHC Modules
 
 import Data.Data (Data)
-import Data.List as List (map, intersperse)
 import Data.Function
+import Data.List as List (map, intersperse)
+import Data.Map.Ordered (OMap)
+import qualified Data.Map.Ordered as MO
 import Data.Set as Set (Set, toList)
 import Data.Typeable (Typeable)
 import Debian.Arch (Arch, prettyArch)
@@ -25,7 +46,14 @@ type Relations = AndRelation
 type AndRelation = [OrRelation]
 type OrRelation = [Relation]
 
-data Relation = Rel BinPkgName (Maybe VersionReq) (Maybe ArchitectureReq) deriving (Eq, Read, Show)
+type RestrictionList = OMap String Bool
+
+data Relation = RRel BinPkgName (Maybe VersionReq) (Maybe ArchitectureReq) [RestrictionList] deriving (Eq, Read, Show)
+
+{-# DEPRECATED Rel "Switch to RRel" #-}
+pattern Rel :: BinPkgName -> Maybe VersionReq -> Maybe ArchitectureReq -> Relation
+pattern Rel a mb mc <- RRel a mb mc _ where
+  Rel a mb mc = RRel a mb mc []
 
 newtype SrcPkgName = SrcPkgName {unSrcPkgName :: String} deriving (Read, Show, Eq, Ord, Data, Typeable)
 newtype BinPkgName = BinPkgName {unBinPkgName :: String} deriving (Read, Show, Eq, Ord, Data, Typeable)
@@ -52,12 +80,18 @@ prettyRelations xss = mconcat . intersperse (text "\n, ") . List.map prettyOrRel
 prettyOrRelation :: [Relation] -> Doc
 prettyOrRelation xs = mconcat . intersperse (text " | ") . List.map prettyRelation $ xs
 
+prettyRlists :: [RestrictionList] -> Doc
+prettyRlists xs = mconcat . intersperse (text " ") . List.map prettyRlist $ xs
+    where
+        prettyRlist r = text "<" <> mconcat (intersperse (text (" ")) $ fmap prettyOne (MO.assocs r)) <> text ">"
+        prettyOne (k, v) = (if v then mempty else text "!") <> text k
+
 prettyRelation :: Relation -> Doc
-prettyRelation (Rel name ver arch) =
-    pretty (PP name) <> maybe empty prettyVersionReq ver <> maybe empty prettyArchitectureReq arch
+prettyRelation (RRel name ver arch rlists) =
+    pretty (PP name) <> maybe empty prettyVersionReq ver <> maybe empty prettyArchitectureReq arch <> prettyRlists rlists
 
 instance Ord Relation where
-    compare (Rel pkgName1 mVerReq1 _mArch1) (Rel pkgName2 mVerReq2 _mArch2) =
+    compare (RRel pkgName1 mVerReq1 _mArch1 _) (RRel pkgName2 mVerReq2 _mArch2 _) =
         case compare pkgName1 pkgName2 of
              LT -> LT
              GT -> GT

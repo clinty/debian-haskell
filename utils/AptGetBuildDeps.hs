@@ -27,7 +27,7 @@ lookupDepends key paragraph =
                           map pkgName (concatMap (take 1) andRelations)
     where
       pkgName :: Relation -> BinPkgName
-      pkgName (Rel name _ _) = name
+      pkgName (RRel name _ _ _) = name
 
 
 aptGetInstall :: [String] -> [BinPkgName] -> IO ExitCode

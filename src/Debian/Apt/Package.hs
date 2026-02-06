@@ -40,7 +40,7 @@ findProvides providesf packages = foldl addProvides' [] packages
 -- |'lookupPackageByRel' returns all the packages that satisfy the specified relation
 -- TODO: Add architecture check
 lookupPackageByRel :: PackageNameMap a -> (a -> (BinPkgName, DebianVersion)) -> Relation -> [a]
-lookupPackageByRel pm packageVersionF (Rel pkgName mVerReq _mArch) =
+lookupPackageByRel pm packageVersionF (RRel pkgName mVerReq _mArch _rlist) =
     case Map.lookup pkgName pm of
       Nothing -> []
       Just packages -> filter filterVer packages
