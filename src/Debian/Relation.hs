@@ -13,6 +13,7 @@ module Debian.Relation
     , ArchOS(..)
     , ArchCPU(..)
     , VersionReq(..)
+    , RestrictionList
     -- * Helper Functions
     , checkVersionReq
     -- * Relation Parser
@@ -21,5 +22,5 @@ module Debian.Relation
     ) where
 
 import Debian.Arch (Arch(..), ArchOS(..), ArchCPU(..))
-import Debian.Relation.Common (SrcPkgName(..), BinPkgName(..), PkgName(pkgNameFromString))
+import Debian.Relation.Common (SrcPkgName(..), BinPkgName(..), PkgName(pkgNameFromString), RestrictionList)
 import Debian.Relation.String
