@@ -88,7 +88,7 @@ prettyRlists xs = mconcat . intersperse (text " ") . List.map prettyRlist $ xs
 
 prettyRelation :: Relation -> Doc
 prettyRelation (RRel name ver arch rlists) =
-    pretty (PP name) <> maybe empty prettyVersionReq ver <> maybe empty prettyArchitectureReq arch <> prettyRlists rlists
+    pretty (PP name) <> maybe empty prettyVersionReq ver <> maybe empty prettyArchitectureReq arch <> (if null rlists then empty else text " " <> prettyRlists rlists)
 
 instance Ord Relation where
     compare (RRel pkgName1 mVerReq1 _mArch1 _) (RRel pkgName2 mVerReq2 _mArch2 _) =
