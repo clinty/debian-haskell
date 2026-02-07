@@ -131,7 +131,7 @@ conflict csp p1 p2 =
 
 -- |JAS: deal with 'Provides' (can a package provide more than one package?)
 conflict' :: (BinPkgName, DebianVersion) -> Relation -> Bool
-conflict' (pName, pVersion) (Rel pkgName mVersionReq _) =
+conflict' (pName, pVersion) (RRel pkgName mVersionReq _ _) =
     (pName == pkgName) && (checkVersionReq mVersionReq (Just pVersion))
 
 
@@ -274,7 +274,6 @@ combine csp ((s,cs@(c,m)):ns) acc
     | (not (lastvar `elem` c)) && null m = cs
     | null c && null m = ([],[]) -- is this case ever used?
     | otherwise = combine csp ns ((c, m):acc)
-    where lastvar =
-              let (_,(p:_)) = s in (packageVersion csp) p
-
-
+    where lastvar = case s of
+                        (_, p:_) -> packageVersion csp p
+                        _        -> error "combine: empty stack"

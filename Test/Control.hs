@@ -74,10 +74,10 @@ controlTests =
       input9 = Control {unControl = [Paragraph [Field ("Field1", " field1 content\n"), Field ("Field2", " an actual second field")]]} :: Control' String
       -- parsed9buggy = Control {unControl = [Paragraph [Field ("Field1"," field1 content")],Paragraph [Field ("Field2"," an actual second field")]]} :: Control' String
       expected9 =    Control {unControl = [Paragraph [Field ("Field1"," field1 content"),Field ("Field2"," an actual second field")]]}
-      (Right parsed6) = parseControl "string" (prettyShow input6) :: Either ParseError (Control' String)
-      (Right parsed7) = parseControl "string" (prettyShow input7) :: Either ParseError (Control' String)
-      (Right parsed8) = parseControl "string" (prettyShow input8) :: Either ParseError (Control' String)
-      (Right parsed9) = parseControl "string" (prettyShow input9) :: Either ParseError (Control' String)
+      parsed6 = either (error . show) id $ (parseControl "string" (prettyShow input6) :: Either ParseError (Control' String))
+      parsed7 = either (error . show) id $ (parseControl "string" (prettyShow input7) :: Either ParseError (Control' String))
+      parsed8 = either (error . show) id $ (parseControl "string" (prettyShow input8) :: Either ParseError (Control' String))
+      parsed9 = either (error . show) id $ (parseControl "string" (prettyShow input9) :: Either ParseError (Control' String))
 
 -- | These paragraphs have no terminating newlines.  They are added
 -- where appropriate to the expected test results.

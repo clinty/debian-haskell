@@ -116,8 +116,11 @@ instance ControlFunctions C.ByteString where
              Nothing -> Left (newErrorMessage (Message ("Failed to parse " ++ sourceName)) (newPos sourceName 0 0))
              Just (cntl,_) -> Right cntl
     lookupP fieldName (Paragraph fields) =
-        let pFieldName = C.pack (map toLower fieldName) in
-        find (\ (Field (fieldName',_)) -> C.map toLower fieldName' == pFieldName) fields
+        let pFieldName = C.pack (map toLower fieldName)
+            matches (Field (fieldName', _)) = C.map toLower fieldName' == pFieldName
+            matches (Comment _) = False
+        in find matches fields
+
     -- NOTE: probably inefficient
     stripWS = C.reverse . strip . C.reverse . strip
         where strip = C.dropWhile (flip elem [' ', '\t'])

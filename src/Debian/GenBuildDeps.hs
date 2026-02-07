@@ -149,8 +149,8 @@ buildable relax packages =
                         , allBlocked = List.map ofVertex blocked }
     where
       makeReady :: [Vertex] -> [Vertex] -> Vertex -> ReadyTarget a
-      makeReady blocked ready thisReady =
-          let otherReady = filter (/= thisReady) ready
+      makeReady blocked ready' thisReady =
+          let otherReady = filter (/= thisReady) ready'
               (directlyBlocked, otherBlocked) = partition (\ x -> elem x (reachable isDep thisReady)) blocked in
           ReadyTarget { ready = ofVertex thisReady
                       , waiting = List.map ofVertex directlyBlocked
@@ -215,6 +215,7 @@ allCycles g =
       sccCycles t = mapMaybe addBackEdge (treePaths t)
 
       addBackEdge :: [Vertex] -> Maybe [Edge]
+      addBackEdge [] = Nothing
       addBackEdge path@(root : _) =
           let back = (last path, root) in
           if elem back (edges g) then Just (pathEdges (path ++ [root])) else Nothing
